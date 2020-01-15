@@ -20,7 +20,13 @@ def output_result(queues: MethodServerQueues, result_obj: Result, output_param: 
 
 
 # TODO (wardlt): Have the MethodServer class manage creating Parsl apps?
-# TODO (wardlt): How do we send back errors? Errors currently cause apps to hang
+# TODO (wardlt): How do we send back errors? Errors currently cause apps to hang.
+#  I am currently considering a multithreaded approach, but am hesistent due to complexity.
+#  The idea is that the "run_application" thread reads from a queue that is written to by
+#   two other threads: One that reads from the Redis queue pushes tasks to the queue
+#   and a second that pushes errors from Parsl tasks
+#  The "error" thread reads from a second queue that is pushed to from the "run_application".
+#  Would require use of sentinel objects to the queue and waiting for them to empty
 
 class MethodServer(Thread):
     """Abstract class that executes requests across distributed resources.
@@ -36,6 +42,9 @@ class MethodServer(Thread):
     continue to be pushed to the output queue.
 
     The method server, itself, implements the thread interface. So, you can start it
+    as its own thread easily.
+
+    Errors in the method server are handled by
     """
 
     def __init__(self, queues: MethodServerQueues, timeout: Optional[int] = None):
