@@ -135,7 +135,7 @@ class ClientQueues:
 
         # Make the queues
         self.outbound = RedisQueue(hostname, port, 'inputs' if name is None else f'{name}_inputs')
-        self.inbound = RedisQueue(hostname, port, 'inputs' if name is None else f'{name}_results')
+        self.inbound = RedisQueue(hostname, port, 'results' if name is None else f'{name}_results')
 
         # Attempt to connect
         self.outbound.connect()
@@ -209,7 +209,7 @@ class MethodServerQueues:
 
         # Make the queues
         self.inbound = RedisQueue(hostname, port, 'inputs' if name is None else f'{name}_inputs')
-        self.outbound = RedisQueue(hostname, port, 'inputs' if name is None else f'{name}_results')
+        self.outbound = RedisQueue(hostname, port, 'results' if name is None else f'{name}_results')
 
         # Attempt to connect
         self.outbound.connect()
